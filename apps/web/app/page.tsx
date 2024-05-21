@@ -1,7 +1,6 @@
 import dynamic from "next/dynamic";
 import { Button } from "@repo/ui/src/button"
-import { auth, signIn } from "./server/auth";
-import { signOut } from "next-auth/react";
+import { auth, signIn, signOut } from "./server/auth";
 
 export const runtime = 'edge';
 
@@ -62,11 +61,10 @@ export default async function Page() {
           </form>
         </> : <form action={async () => {
           "use server"
-          await signIn()
+          await signIn('google')
         }}>
           <Button className="mt-4">Login with Google</Button>
         </form>}
-
       </div>
 
     </main>
