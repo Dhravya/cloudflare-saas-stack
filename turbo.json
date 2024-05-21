@@ -9,6 +9,7 @@
     "lint": {
       "dependsOn": ["^lint"]
     },
+    "deploy": {},
     "dev": {
       "env" :["NODE_ENV=development"],
       "cache": false,

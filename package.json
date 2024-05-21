@@ -6,7 +6,8 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "setup": "bun run scripts/setup.ts"
+    "setup": "bun run scripts/setup.ts",
+    "deploy": "turbo deploy"
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "1",
