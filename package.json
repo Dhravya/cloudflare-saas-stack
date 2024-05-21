@@ -1,0 +1,44 @@
+{
+  "name": "cloudflare-saas-starter",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "setup": "bun run scripts/setup.ts"
+  },
+  "devDependencies": {
+    "@cloudflare/next-on-pages": "1",
+    "@cloudflare/workers-types": "^4.20240512.0",
+    "@repo/eslint-config": "*",
+    "@repo/tailwind-config": "*",
+    "@repo/typescript-config": "*",
+    "autoprefixer": "^10.4.19",
+    "drizzle-kit": "^0.21.2",
+    "eslint-plugin-next-on-pages": "^1.11.3",
+    "postcss": "^8.4.38",
+    "prettier": "^3.2.5",
+    "readline-sync": "^1.4.10",
+    "tailwindcss": "^3.4.3",
+    "tailwindcss-animate": "^1.0.7",
+    "turbo": "latest",
+    "vercel": "^34.2.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "bun@1.1.8",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "dependencies": {
+    "@auth/drizzle-adapter": "^1.1.0",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@types/readline-sync": "^1.4.8",
+    "drizzle-orm": "^0.30.10",
+    "next-app-theme": "^0.1.10",
+    "next-auth": "^5.0.0-beta.18"
+  }
+}

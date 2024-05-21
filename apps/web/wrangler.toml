@@ -1,0 +1,17 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "cloudflare-saas-starter"
+compatibility_date = "05-20-2024"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
+
+[placement]
+mode = "smart"
+
+# In this file, you can literally add *any* service you want. 
+# Want a Key-Value database? Queues? Docs storage? 
+# Cloudflare has a lot of products that work directly with workers and pages - https://developers.cloudflare.com/products
+
+# Bind a D1 database. D1 is Cloudflare’s native serverless SQL database.
+# Docs: https://developers.cloudflare.com/pages/functions/bindings/#d1-databases
+[[d1_databases]]
+binding = "DATABASE"
