@@ -5,9 +5,9 @@ import { db } from "./db";
 
 export const {
     handlers: { GET, POST },
-    signIn, signOut
+    signIn, signOut, auth
 } = NextAuth({
-    secret: process.env.NEXTAUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET,
     callbacks: {
         session: ({ session, token, user }) => ({
             ...session,
@@ -21,7 +21,7 @@ export const {
     providers: [
         Google({
             clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET
         }),
     ],
 })

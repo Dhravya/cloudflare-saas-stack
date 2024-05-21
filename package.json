@@ -14,6 +14,7 @@
     "@repo/eslint-config": "*",
     "@repo/tailwind-config": "*",
     "@repo/typescript-config": "*",
+    "@tailwindcss/typography": "^0.5.13",
     "autoprefixer": "^10.4.19",
     "drizzle-kit": "^0.21.2",
     "eslint-plugin-next-on-pages": "^1.11.3",
