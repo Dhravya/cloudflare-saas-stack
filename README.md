@@ -7,17 +7,16 @@ To use, simply:
 ```
 git clone https://github.com/Dhravya/cloudflare-saas-stack
 cd cloudflare-saas-stack
-npm install
-npm run setup
+npm i -g bun
+bun install
+bun run setup
 ```
 
 That's it. You're ready to go!
 
-Next time, you can just run `npm run dev` and start developing.
+Next time, you can just run `bun run dev` and start developing.
 
-When you're ready to deploy, run `npm run deploy` to deploy to Cloudflare.
-
-> I recommend using [bun](https://bun.sh/) for development.
+When you're ready to deploy, run `bun run deploy` to deploy to Cloudflare.
 
 ## About
 
