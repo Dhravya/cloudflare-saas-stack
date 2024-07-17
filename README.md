@@ -4,6 +4,9 @@ This is a starter kit for quickly building SaaS products on Cloudflare.
 
 To use, simply:
 
+1. Make sure that you have [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/#installupdate-wrangler) installed.
+
+2. Run the following commands:
 ```
 git clone https://github.com/Dhravya/cloudflare-saas-stack
 cd cloudflare-saas-stack
