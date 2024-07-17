@@ -4,6 +4,7 @@ import * as path from "path";
 import * as toml from "@iarna/toml";
 import { execSync, spawnSync } from "child_process";
 import crypto from "crypto";
+import os from "os";
 
 // Function to execute shell commands
 function executeCommand(command: string) {
@@ -277,6 +278,19 @@ async function runDatabaseMigrations(dbName: string) {
   remoteMigrationSpinner.stop("Remote database migrations completed.");
 }
 
+function setEnvironmentVariable(name: string, value: string) {
+    const platform = os.platform();
+    let command;
+
+    if (platform === 'win32') {
+        command = `set ${name}=${value}`; // Windows Command Prompt
+    } else {
+        command = `export ${name}=${value}`; // Unix-like shells
+    }
+
+    executeCommand(command);
+}
+
 // Main function
 async function main() {
   try {
@@ -293,7 +307,7 @@ async function main() {
 
     console.log(`\x1b[33mUsing account ${accountIds.find(account => account.id === accountId)?.name}\x1b[0m`);
 
-    process.env.CLOUDFLARE_ACCOUNT_ID = accountId;
+    setEnvironmentVariable("CLOUDFLARE_ACCOUNT_ID", accountId);
 
     await createDatabaseAndConfigure();
     await promptForGoogleClientCredentials();
