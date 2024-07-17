@@ -15,6 +15,8 @@ That's it. You're ready to go!
 
 Next time, you can just run `npm run dev` and start developing.
 
+When you're ready to deploy, run `npm run deploy` to deploy to Cloudflare.
+
 > I recommend using [bun](https://bun.sh/) for development.
 
 ## About
