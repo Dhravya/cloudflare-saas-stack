@@ -56,38 +56,6 @@ function extractAccountDetails(output: string): { name: string; id: string }[] {
   return accountDetails;
 }
 
-// Function to update wrangler.toml with account ID
-async function updateWranglerTomlWithAccountId(accountId: string) {
-  const wranglerTomlPath = path.join(
-    __dirname,
-    "..",
-    "apps",
-    "web",
-    "wrangler.toml"
-  );
-  let wranglerToml: toml.JsonMap;
-
-  try {
-    const wranglerTomlContent = fs.readFileSync(wranglerTomlPath, "utf-8");
-    wranglerToml = toml.parse(wranglerTomlContent);
-  } catch (error) {
-    console.error("\x1b[31mError reading wrangler.toml:", error, "\x1b[0m");
-    cancel("Operation cancelled.");
-    process.exit(1);
-  }
-
-  wranglerToml.account_id = accountId;
-
-  try {
-    const updatedToml = toml.stringify(wranglerToml);
-    fs.writeFileSync(wranglerTomlPath, updatedToml);
-    console.log("\x1b[33mAccount ID updated in wrangler.toml\x1b[0m");
-  } catch (error) {
-    console.error("\x1b[31mError updating wrangler.toml:", error, "\x1b[0m");
-    cancel("Operation cancelled.");
-  }
-}
-
 // Function to prompt for account ID if there are multiple accounts
 async function promptForAccountId(
   accounts: { name: string; id: string }[]
@@ -325,7 +293,7 @@ async function main() {
 
     console.log(`\x1b[33mUsing account ${accountIds.find(account => account.id === accountId)?.name}\x1b[0m`);
 
-    await updateWranglerTomlWithAccountId(accountId);
+    process.env.CLOUDFLARE_ACCOUNT_ID = accountId;
 
     await createDatabaseAndConfigure();
     await promptForGoogleClientCredentials();
