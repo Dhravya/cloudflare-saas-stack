@@ -1,6 +1,7 @@
 {
   "name": "cloudflare-saas-starter",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
@@ -10,9 +11,11 @@
     "deploy": "turbo deploy"
   },
   "devDependencies": {
+    "@clack/prompts": "^0.7.0",
     "@cloudflare/next-on-pages": "1",
     "@cloudflare/workers-types": "^4.20240512.0",
     "@repo/eslint-config": "*",
+    "@repo/shared-types": "*",
     "@repo/tailwind-config": "*",
     "@repo/typescript-config": "*",
     "@tailwindcss/typography": "^0.5.13",
@@ -37,10 +40,23 @@
   ],
   "dependencies": {
     "@auth/drizzle-adapter": "^1.1.0",
+    "@aws-sdk/client-s3": "^3.577.0",
+    "@aws-sdk/s3-request-presigner": "^3.577.0",
+    "@hookform/resolvers": "^3.4.2",
+    "@iarna/toml": "^2.2.5",
+    "@radix-ui/react-icons": "^1.3.0",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-progress": "^1.0.3",
+    "@radix-ui/react-scroll-area": "^1.0.5",
     "@radix-ui/react-slot": "^1.0.2",
     "@types/readline-sync": "^1.4.8",
     "drizzle-orm": "^0.30.10",
     "next-app-theme": "^0.1.10",
-    "next-auth": "^5.0.0-beta.18"
+    "next-auth": "^5.0.0-beta.18",
+    "react-dropzone": "^14.2.3",
+    "react-hook-form": "^7.51.5",
+    "sonner": "^1.4.41",
+    "uploadthing": "^6.10.4",
+    "zod": "^3.23.8"
   }
 }

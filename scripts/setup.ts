@@ -1,109 +1,122 @@
-import { execSync, spawnSync } from 'child_process';
+import { intro, outro, text, confirm, spinner, cancel } from '@clack/prompts';
 import * as fs from 'fs';
 import * as path from 'path';
+import * as toml from '@iarna/toml';
+import { execSync, spawnSync } from 'child_process';
 import crypto from 'crypto';
 
-let dbName: string
+let dbName: string;
 
 // Function to execute shell commands
 function executeCommand(command: string) {
     console.log(`\x1b[33m${command}\x1b[0m`);
     try {
         return execSync(command, { encoding: 'utf-8' });
-        //@ts-expect-error
-    } catch (error: {
-        stdout?: unknown
-        stderr?: unknown
-    }) {
-        return { error: true, message: error.stdout || error.stderr };
-    }
+    } catch (error: any) { return { error: true, message: error.stdout || error.stderr }; }
 }
 
 // Function to prompt user for input without readline-sync
-function prompt(message: string, defaultValue: string): string {
-    process.stdout.write(`${message} (${defaultValue}): `);
-    const buffer: Buffer = Buffer.alloc(100);
-    const bytes = fs.readSync(0, buffer, 0, buffer.length, null);
-    const userInput = buffer.slice(0, bytes - 1).toString();
-    return userInput || defaultValue;
+async function prompt(message: string, defaultValue: string): Promise<string> {
+    return await text({ message: `${message} (${defaultValue}):`, placeholder: defaultValue, defaultValue }) as string
 }
 
-// Function to install dependencies with loader message
-function installDependencies() {
-    console.log('\x1b[33mInstalling dependencies...\x1b[0m');
-    // Run bun i command with loader
-    executeCommand('bun i');
-}
 
 // Function to create database and update wrangler.toml
-function createDatabaseAndConfigure() {
-    // Guide the user
-    console.log('\x1b[33mLet\'s set up your database...\x1b[0m');
-
-    // Prompt user for the database name
+async function createDatabaseAndConfigure() {
+    intro(`Let's set up your database...`);
     const defaultDBName = path.basename(process.cwd()) + '-db';
-    dbName = prompt('Enter the name of your database', defaultDBName);
+    dbName = await prompt('Enter the name of your database', defaultDBName);
+
+    let databaseID: string;
+
+    const wranglerTomlPath = path.join(__dirname, '..', 'apps', 'web', 'wrangler.toml');
+    let wranglerToml: toml.JsonMap;
+
+    try {
+        const wranglerTomlContent = fs.readFileSync(wranglerTomlPath, 'utf-8');
+        wranglerToml = toml.parse(wranglerTomlContent);
+    } catch (error) {
+        console.error('\x1b[31mError reading wrangler.toml:', error, '\x1b[0m');
+        cancel('Operation cancelled.');
+    }
 
     // Run command to create a new database
     const creationOutput = executeCommand(`bunx wrangler d1 create ${dbName}`);
 
-    const wranglerTomlPath = path.join(__dirname, '..', 'apps', 'web', 'wrangler.toml');
-
-    // @ts-expect-error
-    if (creationOutput.error) {
-        console.log('\x1b[31mThe d1 database already exists. You will need to edit wrangler.toml to include the ID of your database.\x1b[0m');
-        const databaseConfig = `\ndatabase_name = "${dbName}"\n`;
-        fs.appendFileSync(wranglerTomlPath, databaseConfig);
-        return;
-    } else {
-        // Extract database ID from the output
-        const matchResult = (creationOutput as string).match(/database_id = "(.*)"/);
-        if (matchResult && matchResult.length === 2) {
-            const databaseID = matchResult[1];
-
-            const databaseConfig = `\ndatabase_name = "${dbName}"\ndatabase_id = "${databaseID}"\n`;
-            fs.appendFileSync(wranglerTomlPath, databaseConfig);
-
-            // Guide the user
-            console.log('\x1b[33mDatabase configuration updated in wrangler.toml\x1b[0m');
+    if (creationOutput === undefined || typeof creationOutput !== 'string') {
+        console.log("\x1b[33mDatabase creation failed, maybe you have already created a database with that name. I'll try to find the database ID for you.\x1b[0m");
+        const dbInfoOutput = executeCommand(`bunx wrangler d1 info ${dbName}`);
+        console.log(dbInfoOutput);
+        const getInfo = (dbInfoOutput as string).match(/│ [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12} │/i );
+        if (getInfo && getInfo.length === 1) {
+            console.log("\x1b[33mFound it! The database ID is: ", getInfo[0], "\x1b[0m");
+            databaseID = getInfo[0].replace("│ ", "").replace(" │", "");
         } else {
-            console.error('Failed to extract database ID from the output.');
-            // Handle error gracefully
+            console.error("\x1b[31mSomething went wrong when initialising the database. Please try again.\x1b[0m");
+            cancel('Operation cancelled.');
         }
     }
+    else {
+        // Extract database ID from the output
+        const matchResult = (creationOutput as string).match(/database_id = "(.*)"/);
+        if (matchResult && matchResult.length === 2 && matchResult !== undefined) {
+            databaseID = matchResult[1]!
+        } else {
+            console.error('Failed to extract database ID from the output.');
+            cancel('Operation cancelled.');
+        }
+    }
+
+    // Update wrangler.toml with database configuration
+    wranglerToml = {
+        ... wranglerToml!,
+        d1_databases: [
+            {
+                binding: "DATABASE",
+                database_name: dbName,
+                database_id: databaseID!,
+            }
+        ]
+    }
+
+    console.log(wranglerToml);
+
+    try {
+        const updatedToml = toml.stringify(wranglerToml);
+        console.log(updatedToml);
+        fs.writeFileSync(wranglerTomlPath, updatedToml);
+        console.log('\x1b[33mDatabase configuration updated in wrangler.toml\x1b[0m');
+    } catch (error) {
+        console.error('\x1b[31mError updating wrangler.toml:', error, '\x1b[0m');
+        cancel('Operation cancelled.');
+    }
+
+    outro('Database configuration completed.');
 }
 
+
 // Function to prompt for Google client credentials
-function promptForGoogleClientCredentials() {
-    // Guide the user
-    console.log('\x1b[33mNow, time for auth!\x1b[0m');
+async function promptForGoogleClientCredentials() {
+    intro('Now, time for auth!');
 
-    // Provide instructions on how to get Google client IDs
-    console.log('Please follow the instructions below to obtain your Google client ID and client secret:');
-    console.log('1. Go to the Google Developer Console (https://console.developers.google.com/)');
-    console.log('2. Create a new project or select an existing one.');
-    console.log('3. Enable the Google Drive API for your project.');
-    console.log('4. Create credentials (OAuth client ID) for a Web application.');
-    console.log('5. Add http://localhost:3000/api/auth/callback/google as the redirect domain')
-
-    // Prompt user for client ID and client secret
-    const clientId = prompt('Enter your Google Client ID', '');
-
-    const clientSecret = prompt('Enter your Google Client Secret', '');
-
-    // Get .dev.vars file path
     const devVarsPath = path.join(__dirname, '..', 'apps', 'web', '.dev.vars');
 
-    // Check if .dev.vars already exists
     if (!fs.existsSync(devVarsPath)) {
-        // Create .dev.vars file and write credentials
-        fs.writeFileSync(devVarsPath, `GOOGLE_CLIENT_ID=${clientId}\nGOOGLE_CLIENT_SECRET=${clientSecret}\n`);
-        console.log('\x1b[33m.dev.vars file created with Google Client ID and Client Secret.\x1b[0m');
+        const clientId = await prompt('Enter your Google Client ID', '');
+        const clientSecret = await prompt('Enter your Google Client Secret', '');
+
+        try {
+            fs.writeFileSync(devVarsPath, `GOOGLE_CLIENT_ID=${clientId}\nGOOGLE_CLIENT_SECRET=${clientSecret}\n`);
+            console.log('\x1b[33m.dev.vars file created with Google Client ID and Client Secret.\x1b[0m');
+        } catch (error) {
+            console.error('\x1b[31mError creating .dev.vars file:', error, '\x1b[0m');
+            cancel('Operation cancelled.');
+        }
     } else {
-        // Append credentials to .dev.vars file
-        fs.appendFileSync(devVarsPath, `\nGOOGLE_CLIENT_ID=${clientId}\nGOOGLE_CLIENT_SECRET=${clientSecret}`);
-        console.log('\x1b[33mGoogle Client ID and Client Secret appended to .dev.vars file.\x1b[0m');
+        console.log('\x1b[31m.dev.vars file already exists. Skipping creation.\x1b[0m');
     }
+
+    outro('.dev.vars updated with Google Client ID and Client Secret.');
 }
 
 // Function to generate secure random 32-character string
@@ -112,42 +125,58 @@ function generateSecureRandomString(length: number): string {
 }
 
 // Function to update .dev.vars with secure random string
-function updateDevVarsWithSecret() {
-    // Generate secure random string
+async function updateDevVarsWithSecret() {
     const secret = generateSecureRandomString(32);
-    
-    // Get .dev.vars file path
     const devVarsPath = path.join(__dirname, '..', 'apps', 'web', '.dev.vars');
 
-    // Append secret to .dev.vars file
-    fs.appendFileSync(devVarsPath, `\nNEXTAUTH_SECRET=${secret}`);
-    console.log('\x1b[33mSecret appended to .dev.vars file.\x1b[0m');
+    try {
+        if (!fs.readFileSync(devVarsPath, 'utf-8').includes('NEXTAUTH_SECRET')) {
+            fs.appendFileSync(devVarsPath, `\nNEXTAUTH_SECRET=${secret}`);
+            console.log('\x1b[33mSecret appended to .dev.vars file.\x1b[0m');
+        } else {
+            console.log('\x1b[31mNEXTAUTH_SECRET already exists in .dev.vars\x1b[0m');
+        }
+    } catch (error) {
+        console.error('\x1b[31mError updating .dev.vars file:', error, '\x1b[0m');
+        cancel('Operation cancelled.');
+    }
+
+    outro('.dev.vars updated with secure secret.');
 }
 
 // Function to run database migrations
-function runDatabaseMigrations(dbName: string) {
-
-    // Generate setup migration
+async function runDatabaseMigrations(dbName: string) {
+    const setupMigrationSpinner = spinner();
+    setupMigrationSpinner.start('Generating setup migration...');
     executeCommand('cd apps/web && bunx drizzle-kit generate --name setup');
+    setupMigrationSpinner.stop('Setup migration generated.');
 
-    // Run migration
+    const localMigrationSpinner = spinner();
+    localMigrationSpinner.start('Running local database migrations...');
     executeCommand(`cd apps/web && wrangler d1 execute ${dbName} --local --file=migrations/0000_setup.sql`);
+    localMigrationSpinner.stop('Local database migrations completed.');
+
+    const remoteMigrationSpinner = spinner();
+    remoteMigrationSpinner.start('Running remote database migrations...');
+    executeCommand(`cd apps/web && wrangler d1 execute ${dbName} --file=migrations/0000_setup.sql`);
+    remoteMigrationSpinner.stop('Remote database migrations completed.');
 }
 
 // Main function
 async function main() {
-    installDependencies();
-    createDatabaseAndConfigure();
-    promptForGoogleClientCredentials();
-    console.log('\x1b[33mReady... Set... Launch\x1b[0m');
+    try {
+        await createDatabaseAndConfigure();
+        await promptForGoogleClientCredentials();
+        console.log('\x1b[33mReady... Set... Launch\x1b[0m');
+        await updateDevVarsWithSecret();
+        await runDatabaseMigrations(dbName);
 
-    // Generate secure random string and update .dev.vars
-    updateDevVarsWithSecret();
-    runDatabaseMigrations(dbName);
-
-    // Run `bun run dev` command
-    console.log('\x1b[33mRunning bun run dev command...\x1b[0m');
-    spawnSync('bun', ['run', 'dev'], { stdio: 'inherit' });
+        console.log('\x1b[33mRunning bun run dev command...\x1b[0m');
+        spawnSync('bun', ['run', 'dev'], { stdio: 'inherit' });
+    } catch (error) {
+        console.error('\x1b[31mError:', error, '\x1b[0m');
+        cancel('Operation cancelled.');
+    }
 }
 
 // Run the main function
