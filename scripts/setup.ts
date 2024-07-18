@@ -288,7 +288,8 @@ function setEnvironmentVariable(name: string, value: string) {
         command = `export ${name}=${value}`; // Unix-like shells
     }
 
-    executeCommand(command);
+    console.log(`\x1b[33mPlease run this command: ${command} and then rerun the setup script.\x1b[0m`);
+    process.exit(1);
 }
 
 // Main function
@@ -302,14 +303,18 @@ async function main() {
       cancel("Operation cancelled.");
       process.exit(1);
     }
-    const accountIds = extractAccountDetails(whoamiOutput);
-    const accountId = await promptForAccountId(accountIds);
 
-    console.log(`\x1b[33mUsing account ${accountIds.find(account => account.id === accountId)?.name}\x1b[0m`);
+    try {
+        await createDatabaseAndConfigure();
+    } catch (error) {
+        console.error("\x1b[31mError:", error, "\x1b[0m");
+        const accountIds = extractAccountDetails(whoamiOutput);
+        const accountId = await promptForAccountId(accountIds);
+        setEnvironmentVariable("CLOUDFLARE_ACCOUNT_ID", accountId);
+        cancel("Operation cancelled.");
+        process.exit(1);
+    }
 
-    setEnvironmentVariable("CLOUDFLARE_ACCOUNT_ID", accountId);
-
-    await createDatabaseAndConfigure();
     await promptForGoogleClientCredentials();
     console.log("\x1b[33mReady... Set... Launch\x1b[0m");
     await updateDevVarsWithSecret();

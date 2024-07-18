@@ -9,4 +9,4 @@ mode = "smart"
 [[d1_databases]]
 binding = "DATABASE"
 database_name = "cloudflare-saas-starter-db"
-database_id = "3b133fba-f594-424e-aa38-dbfb443141d8"
+database_id = "8f7be7f2-8bc0-486d-bfaf-ba0ba8e37140"
