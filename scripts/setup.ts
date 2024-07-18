@@ -292,7 +292,6 @@ function setEnvironmentVariable(name: string, value: string) {
     process.exit(1);
 }
 
-// Main function
 async function main() {
   try {
     const whoamiOutput = executeCommand("wrangler whoami");
@@ -328,5 +327,4 @@ async function main() {
   }
 }
 
-// Run the main function
 main();
