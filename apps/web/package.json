@@ -1,15 +1,14 @@
 {
-  "name": "web",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint . --max-warnings 0",
-    "cf-typegen": "wrangler types --env-interface CloudflareEnv env.d.ts",
-    "pages:build": "bunx @cloudflare/next-on-pages",
-    "preview": "bun pages:build && wrangler pages dev",
-    "deploy": "bun pages:build && wrangler pages deploy"
-  }
+	"name": "web",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"cf-typegen": "wrangler types --env-interface CloudflareEnv env.d.ts",
+		"pages:build": "bunx @cloudflare/next-on-pages",
+		"preview": "bun pages:build && wrangler pages dev",
+		"deploy": "bun pages:build && wrangler pages deploy"
+	}
 }

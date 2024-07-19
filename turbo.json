@@ -1,19 +1,19 @@
 {
-  "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env.*local"],
-  "tasks": {
-    "build": {
-      "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**"]
-    },
-    "lint": {
-      "dependsOn": ["^lint"]
-    },
-    "deploy": {},
-    "dev": {
-      "env" :["NODE_ENV=development"],
-      "cache": false,
-      "persistent": true
-    }
-  }
+	"$schema": "https://turbo.build/schema.json",
+	"globalDependencies": ["**/.env.*local"],
+	"tasks": {
+		"build": {
+			"dependsOn": ["^build"],
+			"outputs": [".next/**", "!.next/cache/**"]
+		},
+		"format-and-lint": {
+			"dependsOn": ["^format-and-lint"]
+		},
+		"deploy": {},
+		"dev": {
+			"env": ["NODE_ENV=development"],
+			"cache": false,
+			"persistent": true
+		}
+	}
 }

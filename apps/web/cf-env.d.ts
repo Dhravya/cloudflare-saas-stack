@@ -1,7 +1,7 @@
 declare global {
-    namespace NodeJS {
-        interface ProcessEnv extends CloudflareEnv {}
-    }
+	namespace NodeJS {
+		interface ProcessEnv extends CloudflareEnv {}
+	}
 }
 
-export {};
+export type {};
