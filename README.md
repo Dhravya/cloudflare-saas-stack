@@ -1,4 +1,6 @@
-## Cloudflare SaaS Starter kit
+## 🚀 Full-Stack Cloudflare SaaS kit
+
+**_Build and deploy scalable products on Cloudflare with ease._**
 
 An opinionated, batteries-included starter kit for quickly building and deploying SaaS products on Cloudflare.
 
