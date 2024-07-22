@@ -13,7 +13,6 @@ An opinionated, batteries-included starter kit for quickly building and deployin
 - [Cloudflare D1](https://developers.cloudflare.com/products/d1/) for serverless databases
 - [Cloudflare Pages](https://pages.cloudflare.com/) for hosting
 - [Biome](https://biomejs.dev/) for formatting and linting
-- [Tailwind CSS](https://tailwindcss.com/) for styling
 - [ShadcnUI](https://shadcn.com/) as the component library
 
 ... while still being minimal and composable.
