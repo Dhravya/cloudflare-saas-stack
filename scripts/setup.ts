@@ -97,6 +97,7 @@ async function promptForAccountId(
 }
 
 let pagesName: string;
+let bucketR2Name: string;
 let dbName: string;
 
 // Function to create database and update wrangler.toml
@@ -202,6 +203,59 @@ async function createPagesProject() {
 	pagesProjectSpinner.stop("Pages project created.");
 }
 
+async function createBucketR2(){
+	const wranglerTomlPath = path.join(
+		__dirname,
+		"..",
+		"apps",
+		"web",
+		"wrangler.toml",
+	);
+	let wranglerToml: toml.JsonMap;
+
+	try {
+		const wranglerTomlContent = fs.readFileSync(wranglerTomlPath, "utf-8");
+		wranglerToml = toml.parse(wranglerTomlContent);
+	} catch (error) {
+		console.error("\x1b[31mError reading wrangler.toml:", error, "\x1b[0m");
+		cancel("Operation cancelled.");
+	}
+
+	const bucketR2Spinner = spinner();
+	const defaultBucketName = `${path.basename(process.cwd())}-bucket`;
+	bucketR2Name = await prompt(
+		"Enter the name of your bucket",
+		defaultBucketName,
+	);
+	bucketR2Spinner.start("Creating bucket...");
+	executeCommand(`wrangler r2 bucket create ${bucketR2Name}`);
+	bucketR2Spinner.stop("Bucket created.");
+
+	// Update wrangler.toml with bucket configuration
+	wranglerToml = {
+		...wranglerToml!,
+		r2_buckets: [
+			{
+				binding: "MY_BUCKET",
+				bucket_name: bucketR2Name,
+			},
+		],
+	};
+
+	try {
+		const updatedToml = toml.stringify(wranglerToml);
+		fs.writeFileSync(wranglerTomlPath, updatedToml);
+		console.log(
+			"\x1b[33mBucket configuration updated in wrangler.toml\x1b[0m",
+		);
+	} catch (error) {
+		console.error("\x1b[31mError updating wrangler.toml:", error, "\x1b[0m");
+		cancel("Operation cancelled.");
+	}
+
+	outro("Bucket configuration completed.");
+}
+
 // Function to prompt for Google client credentials
 async function promptForGoogleClientCredentials() {
 	intro("Now, time for auth!");
@@ -280,14 +334,14 @@ async function runDatabaseMigrations(dbName: string) {
 	const localMigrationSpinner = spinner();
 	localMigrationSpinner.start("Running local database migrations...");
 	executeCommand(
-		`cd apps/web && wrangler d1 execute ${dbName} --local --file=migrations/0000_setup.sql`,
+		`cd apps/web && bunx wrangler d1 migrations apply ${dbName}`,
 	);
 	localMigrationSpinner.stop("Local database migrations completed.");
 
 	const remoteMigrationSpinner = spinner();
 	remoteMigrationSpinner.start("Running remote database migrations...");
 	executeCommand(
-		`cd apps/web && wrangler d1 execute ${dbName} --remote --file=migrations/0000_setup.sql`,
+		`cd apps/web && bunx wrangler d1 migrations apply ${dbName} --remote`,
 	);
 	remoteMigrationSpinner.stop("Remote database migrations completed.");
 }
@@ -332,6 +386,14 @@ async function main() {
 
 		try {
 			await createPagesProject();
+		} catch (error) {
+			console.error("\x1b[31mError:", error, "\x1b[0m");
+			cancel("Operation cancelled.");
+			process.exit(1);
+		}
+
+		try {
+			await createBucketR2();
 		} catch (error) {
 			console.error("\x1b[31mError:", error, "\x1b[0m");
 			cancel("Operation cancelled.");

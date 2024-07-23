@@ -13,6 +13,13 @@ export async function PUT(request: NextRequest) {
 		return new Response("Unauthorized", { status: 401 });
 	}
 
+	const formData = await request.formData();
+	const file = formData.get("data") as File;
+	const buffer = Buffer.from(await file.arrayBuffer());
+	if (buffer.length > 4 * 1024 * 1024) {
+		return new Response("File too large", { status: 400 });
+	}
+	
 	const reqUrl = new URL(request.url);
 	const filename = reqUrl.searchParams.get("filename");
 

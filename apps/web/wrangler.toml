@@ -8,5 +8,9 @@ mode = "smart"
 
 [[d1_databases]]
 binding = "DATABASE"
-database_name = "new-commit"
-database_id = "6e4ffe08-4acc-4436-9677-9fa0d2cf3bfa"
+database_name = ""
+database_id = ""
+
+[[r2_buckets]]
+binding = ""
+bucket_name = ""
