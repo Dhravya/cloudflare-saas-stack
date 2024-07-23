@@ -40,6 +40,38 @@ When you're ready to deploy, run `bun run deploy` to deploy to Cloudflare.
 
 > If it fails, get your account id using these [steps](https://github.com/Dhravya/cloudflare-saas-stack/issues/11#issuecomment-2246060464) and set the `CLOUDFLARE_ACCOUNT_ID` environment variable to your account id. See [this issue](https://github.com/Dhravya/cloudflare-saas-stack/issues/11) for details.
 
+To apply database migrations, run `bun run migrate:prd`.
+
+### Cloudflare R2 Bucket Cors / File Upload
+
+Don't forget to add the CORS policy to the R2 bucket.
+
+Add the allowed origins to the bucket CORS policy.
+
+The CORS policy on the bucker must be like this:
+```JSON
+[
+  {
+    "AllowedOrigins": [
+      "http://localhost:3000",
+      "https://your-domain.com"
+    ],
+    "AllowedMethods": [
+      "GET",
+      "PUT"
+    ],
+    "AllowedHeaders": [
+      "Content-Type"
+    ],
+    "ExposeHeaders": [
+      "ETag"
+    ]
+  }
+]
+```
+
+You can now test the file upload by going to `http://localhost:3000/upload` and uploading a file.
+
 ### Manual setup
 
 An automatic setup script is provided, but you can also manually set up the following:
