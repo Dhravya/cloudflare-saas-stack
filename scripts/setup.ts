@@ -287,7 +287,7 @@ async function runDatabaseMigrations(dbName: string) {
 	const remoteMigrationSpinner = spinner();
 	remoteMigrationSpinner.start("Running remote database migrations...");
 	executeCommand(
-		`cd apps/web && wrangler d1 execute ${dbName} --file=migrations/0000_setup.sql`,
+		`cd apps/web && wrangler d1 execute ${dbName} --remote --file=migrations/0000_setup.sql`,
 	);
 	remoteMigrationSpinner.stop("Remote database migrations completed.");
 }
