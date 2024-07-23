@@ -4,6 +4,8 @@
 
 An opinionated, batteries-included starter kit for quickly building and deploying SaaS products on Cloudflare.
 
+This is the same stack I used to build [Supermemory.ai](Supermemory.ai) which is open source at [git.new/memory](git.new/memory)
+
 ### The stack includes:
 - [Turborepo](https://turbo.build/) for monorepo management
 - [Next.js](https://nextjs.org/) for frontend
@@ -52,3 +54,18 @@ NEXTAUTH_SECRET=${your-secret}
 5. Run remote migration for the production database - same command without `--local`: `bunx wrangler d1 execute ${dbName} --file=migrations/0000_setup.sql`
 6. Bun `bun run dev` to start the development server.
 7. Run `bun run deploy` to deploy to Cloudflare.
+
+
+### The beauty of this stack
+
+It's fully scalable and composable. 
+Want to add a backend hono worker, or a python backend? sure! Just put it in the monorepo and deploy. 
+
+there's no environment variables.
+want to use database? just env.DB. Want a Key-value instance? env.KV. want a queue? env.Queue.
+
+want AI? env. AI
+
+tools are incredible. there's wrangler - you can use wrangler to create/delete databases run migrations and all sorts.
+
+Getting a lot of traffic? me too. I pay $5/month, for all of my projects hosted at the same time. (see https://supermemory.ai, https://md.dhr.wtf and more)
