@@ -195,7 +195,10 @@ async function createPagesProject() {
 		defualtPagesName,
 	);
 	pagesProjectSpinner.start("Creating Pages project...");
-	executeCommand(`wrangler create pages ${pagesName}`);
+	const branch = executeCommand("git branch --show-current");
+	executeCommand(
+		`wrangler pages project create ${pagesName} --production-branch ${branch}`,
+	);
 	pagesProjectSpinner.stop("Pages project created.");
 }
 
