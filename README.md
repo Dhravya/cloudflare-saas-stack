@@ -23,7 +23,7 @@ This is the same stack I used to build [Supermemory.ai](https://Supermemory.ai) 
 
 To use, simply clone this repo and run the following commands:
 
-1. Make sure that you have [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/#installupdate-wrangler) installed.
+1. Make sure that you have [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/#installupdate-wrangler) installed. And also that you have logged in with `wrangler login` (You'll need a Cloudflare account)
 
 2. Run the following commands:
 ```
@@ -37,6 +37,8 @@ bun run setup
 That's it. You're ready to go! Next time, you can just run `bun run dev` and start developing.
 
 When you're ready to deploy, run `bun run deploy` to deploy to Cloudflare.
+
+> If it fails, get your account id using these [steps](https://github.com/Dhravya/cloudflare-saas-stack/issues/11#issuecomment-2246060464) and set the `CLOUDFLARE_ACCOUNT_ID` environment variable to. your account id. See [this issue](https://github.com/Dhravya/cloudflare-saas-stack/issues/11) for details.
 
 ### Manual setup
 
