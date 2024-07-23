@@ -4,7 +4,7 @@
 
 An opinionated, batteries-included starter kit for quickly building and deploying SaaS products on Cloudflare.
 
-This is the same stack I used to build [Supermemory.ai](Supermemory.ai) which is open source at [git.new/memory](git.new/memory)
+This is the same stack I used to build [Supermemory.ai](https://Supermemory.ai) which is open source at [git.new/memory](https://git.new/memory)
 
 ### The stack includes:
 - [Turborepo](https://turbo.build/) for monorepo management
