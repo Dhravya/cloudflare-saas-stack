@@ -96,6 +96,7 @@ async function promptForAccountId(
 	}
 }
 
+let pagesName: string;
 let dbName: string;
 
 // Function to create database and update wrangler.toml
@@ -184,6 +185,18 @@ async function createDatabaseAndConfigure() {
 	}
 
 	outro("Database configuration completed.");
+}
+
+async function createPagesProject() {
+	const pagesProjectSpinner = spinner();
+	const defualtPagesName = path.basename(process.cwd());
+	pagesName = await prompt(
+		"Enter the name of your cloudflare pages",
+		defualtPagesName,
+	);
+	pagesProjectSpinner.start("Creating Pages project...");
+	executeCommand(`wrangler create pages ${pagesName}`);
+	pagesProjectSpinner.stop("Pages project created.");
 }
 
 // Function to prompt for Google client credentials
@@ -310,6 +323,14 @@ async function main() {
 			const accountIds = extractAccountDetails(whoamiOutput);
 			const accountId = await promptForAccountId(accountIds);
 			setEnvironmentVariable("CLOUDFLARE_ACCOUNT_ID", accountId);
+			cancel("Operation cancelled.");
+			process.exit(1);
+		}
+
+		try {
+			await createPagesProject();
+		} catch (error) {
+			console.error("\x1b[31mError:", error, "\x1b[0m");
 			cancel("Operation cancelled.");
 			process.exit(1);
 		}
