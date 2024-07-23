@@ -10,7 +10,7 @@ An opinionated, batteries-included starter kit for quickly building and deployin
 - [TailwindCSS](https://tailwindcss.com/) for styling
 - [Drizzle ORM](https://drizzle.org/) for database access
 - [NextAuth](https://next-auth.js.org/) for authentication
-- [Cloudflare D1](https://developers.cloudflare.com/products/d1/) for serverless databases
+- [Cloudflare D1](https://www.cloudflare.com/developer-platform/d1/) for serverless databases
 - [Cloudflare Pages](https://pages.cloudflare.com/) for hosting
 - [Biome](https://biomejs.dev/) for formatting and linting
 - [ShadcnUI](https://shadcn.com/) as the component library
