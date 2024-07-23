@@ -208,7 +208,9 @@ async function promptForGoogleClientCredentials() {
 		try {
 			fs.writeFileSync(
 				devVarsPath,
-				`GOOGLE_CLIENT_ID=${clientId}\nGOOGLE_CLIENT_SECRET=${clientSecret}\n`,
+				`GOOGLE_CLIENT_ID=${clientId}\nGOOGLE_CLIENT_SECRET=${clientSecret}\n\nAdd these values to use drizzle studio on your remote d1 database\n\nCLOUDFLARE_D1_ACCOUNT_ID=xxx\n
+				CLOUDFLARE_D1_API_TOKEN=xxx
+				`,
 			);
 			console.log(
 				"\x1b[33m.dev.vars file created with Google Client ID and Client Secret.\x1b[0m",
