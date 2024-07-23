@@ -1,10 +1,10 @@
 import { execSync, spawnSync } from "node:child_process";
 import crypto from "node:crypto";
-import * as fs from "node:fs";
+import { default as fs } from "node:fs";
 import os from "node:os";
-import * as path from "node:path";
+import { default as path } from "node:path";
 import { cancel, intro, outro, select, spinner, text } from "@clack/prompts";
-import * as toml from "@iarna/toml";
+import { default as toml } from "@iarna/toml";
 
 // Function to execute shell commands
 function executeCommand(command: string) {
