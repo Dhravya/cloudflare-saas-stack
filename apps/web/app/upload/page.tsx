@@ -15,7 +15,7 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@repo/ui/src/form";
-import { getErrorMessage } from "../lib/handle-errors";
+import { getErrorMessage } from "../../lib/handle-errors";
 import { FileUploader } from "./file-uploader";
 
 import { useUploadFile } from "@repo/ui/hooks/use-upload-file";

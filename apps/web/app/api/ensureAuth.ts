@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import type { NextRequest } from "next/server";
-import { db } from "../server/db";
-import { sessions, users } from "../server/db/schema";
+import { db } from "../../server/db";
+import { sessions, users } from "../../server/db/schema";
 
 export async function ensureAuth(req: NextRequest) {
 	// A helper function to protect routes

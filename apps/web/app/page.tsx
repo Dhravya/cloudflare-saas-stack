@@ -1,9 +1,10 @@
 import { Button } from "@repo/ui/src/button";
 import { sql } from "drizzle-orm";
-import { getThemeToggler } from "./lib/get-theme-button";
-import { auth, signIn, signOut } from "./server/auth";
-import { db } from "./server/db";
-import { users } from "./server/db/schema";
+import { getThemeToggler } from "../lib/get-theme-button";
+import { auth, signIn, signOut } from "../server/auth";
+import { db } from "../server/db";
+import { users } from "../server/db/schema";
+import SignInButton from "../components/auth-ui/signInButton";
 
 export const runtime = "edge";
 
@@ -109,7 +110,7 @@ export default async function Page() {
 							await signIn("google");
 						}}
 					>
-						<Button className="mt-4">Login with Google</Button>
+						<SignInButton />
 					</form>
 				)}
 			</div>
