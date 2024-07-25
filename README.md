@@ -53,7 +53,7 @@ GOOGLE_CLIENT_SECRET=${your-google-client-secret}
 NEXTAUTH_SECRET=${your-secret}
 ```
 4. In `apps/web`, run this command to make migrations to setup auth with database: `bunx wrangler d1 execute ${dbName} --local --file=migrations/0000_setup.sql`. This creates a local version of the database and creates the appropriate tables.
-5. Run remote migration for the production database - same command without `--local`: `bunx wrangler d1 execute ${dbName} --file=migrations/0000_setup.sql`
+5. Run remote migration for the production database - same command but replace `--local` with `--remote`: `bunx wrangler d1 execute ${dbName} --remote --file=migrations/0000_setup.sql`
 6. Bun `bun run dev` to start the development server.
 7. Run `bun run deploy` to deploy to Cloudflare.
 
