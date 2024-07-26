@@ -8,7 +8,6 @@
 		"access": "public"
 	},
 	"dependencies": {
-		"@repo/eslint-config": "*",
 		"@repo/typescript-config": "*",
 		"@repo/tailwind-config": "*"
 	}

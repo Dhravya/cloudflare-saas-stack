@@ -18,7 +18,6 @@
 		"@cloudflare/next-on-pages": "1",
 		"@cloudflare/workers-types": "^4.20240512.0",
 		"@iarna/toml": "^2.2.5",
-		"@repo/eslint-config": "*",
 		"@repo/shared-types": "*",
 		"@repo/tailwind-config": "*",
 		"@repo/typescript-config": "*",

@@ -8,7 +8,6 @@
 		"generate:component": "turbo gen react-component"
 	},
 	"devDependencies": {
-		"@repo/eslint-config": "*",
 		"@repo/typescript-config": "*",
 		"@repo/tailwind-config": "*",
 		"@turbo/gen": "^1.12.4",

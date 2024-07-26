@@ -1,7 +1,12 @@
 import { setupDevPlatform } from "@cloudflare/next-on-pages/next-dev";
 
 /** @type {import('next').NextConfig} */
-const nextConfig = { transpilePackages: ["@repo/ui"] };
+const nextConfig = {
+	transpilePackages: ["@repo/ui"],
+	eslint: {
+		ignoreDuringBuilds: true,
+	},
+};
 
 export default nextConfig;
 

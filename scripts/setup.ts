@@ -1,10 +1,10 @@
 import { execSync, spawnSync } from "node:child_process";
 import crypto from "node:crypto";
-import * as fs from "node:fs";
+import { default as fs } from "node:fs";
 import os from "node:os";
-import * as path from "node:path";
+import { default as path } from "node:path";
 import { cancel, intro, outro, select, spinner, text } from "@clack/prompts";
-import * as toml from "@iarna/toml";
+import { default as toml } from "@iarna/toml";
 
 // Function to execute shell commands
 function executeCommand(command: string) {
@@ -96,6 +96,7 @@ async function promptForAccountId(
 	}
 }
 
+let pagesName: string;
 let dbName: string;
 
 // Function to create database and update wrangler.toml
@@ -186,6 +187,21 @@ async function createDatabaseAndConfigure() {
 	outro("Database configuration completed.");
 }
 
+async function createPagesProject() {
+	const pagesProjectSpinner = spinner();
+	const defualtPagesName = path.basename(process.cwd());
+	pagesName = await prompt(
+		"Enter the name of your cloudflare pages",
+		defualtPagesName,
+	);
+	pagesProjectSpinner.start("Creating Pages project...");
+	const branch = executeCommand("git branch --show-current");
+	executeCommand(
+		`wrangler pages project create ${pagesName} --production-branch ${branch}`,
+	);
+	pagesProjectSpinner.stop("Pages project created.");
+}
+
 // Function to prompt for Google client credentials
 async function promptForGoogleClientCredentials() {
 	intro("Now, time for auth!");
@@ -273,7 +289,7 @@ async function runDatabaseMigrations(dbName: string) {
 	const remoteMigrationSpinner = spinner();
 	remoteMigrationSpinner.start("Running remote database migrations...");
 	executeCommand(
-		`cd apps/web && wrangler d1 execute ${dbName} --file=migrations/0000_setup.sql`,
+		`cd apps/web && wrangler d1 execute ${dbName} --remote --file=migrations/0000_setup.sql`,
 	);
 	remoteMigrationSpinner.stop("Remote database migrations completed.");
 }
@@ -312,6 +328,14 @@ async function main() {
 			const accountIds = extractAccountDetails(whoamiOutput);
 			const accountId = await promptForAccountId(accountIds);
 			setEnvironmentVariable("CLOUDFLARE_ACCOUNT_ID", accountId);
+			cancel("Operation cancelled.");
+			process.exit(1);
+		}
+
+		try {
+			await createPagesProject();
+		} catch (error) {
+			console.error("\x1b[31mError:", error, "\x1b[0m");
 			cancel("Operation cancelled.");
 			process.exit(1);
 		}
