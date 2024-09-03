@@ -1,10 +1,8 @@
-"use client";
+import { redirect } from "next/navigation";
+import { auth } from "../server/auth";
+import { UploadForm } from "./form";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as React from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+export const runtime = "edge";
 
 import { Button } from "@repo/ui/src/button";
 import {
