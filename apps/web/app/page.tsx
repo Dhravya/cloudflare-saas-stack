@@ -8,7 +8,7 @@ import { users } from "./server/db/schema";
 export const runtime = "edge";
 
 export default async function Page() {
-	const usr = await auth();
+	const session = await auth();
 
 	const userCount = await db
 		.select({
@@ -87,11 +87,11 @@ export default async function Page() {
 				<div className="mt-4 flex flex-col gap-2">
 					<span>Number of users in database: {userCount[0]!.count}</span>
 				</div>
-				{usr?.user?.email ? (
+				{session?.user?.email ? (
 					<>
 						<div className="mt-4 flex flex-col gap-2">
-							<span>Hello {usr.user.name} 👋</span>
-							<span>{usr.user.email}</span>
+							<span>Hello {session.user.name} 👋</span>
+							<span>{session.user.email}</span>
 						</div>
 						<form
 							action={async () => {
