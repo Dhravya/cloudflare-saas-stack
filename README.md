@@ -1,105 +1,81 @@
-## 🚀 Full-Stack Cloudflare SaaS kit
+# Turborepo starter
 
-**_Build and deploy scalable products on Cloudflare with ease._**
+This is an official starter Turborepo.
 
-An opinionated, batteries-included starter kit for quickly building and deploying SaaS products on Cloudflare.
+## Using this example
 
-This is the same stack I used to build [Supermemory.ai](https://Supermemory.ai) which is open source at [git.new/memory](https://git.new/memory)
+Run the following command:
 
-### The stack includes:
-- [Turborepo](https://turbo.build/) for monorepo management
-- [Next.js](https://nextjs.org/) for frontend
-- [TailwindCSS](https://tailwindcss.com/) for styling
-- [Drizzle ORM](https://orm.drizzle.team/) for database access
-- [NextAuth](https://next-auth.js.org/) for authentication
-- [Cloudflare D1](https://www.cloudflare.com/developer-platform/d1/) for serverless databases
-- [Cloudflare Pages](https://pages.cloudflare.com/) for hosting
-- [Biome](https://biomejs.dev/) for formatting and linting
-- [ShadcnUI](https://shadcn.com/) as the component library
-
-... while still being minimal and composable.
-
-## Getting started
-
-To use, simply clone this repo by running the following commands:
-
-1. Make sure that you have [Wrangler](https://developers.cloudflare.com/workers/wrangler/install-and-update/#installupdate-wrangler) installed. And also that you have logged in with `wrangler login` (You'll need a Cloudflare account)
-
-2. Run the following commands:
-```
-git clone https://github.com/Dhravya/cloudflare-saas-stack
-cd cloudflare-saas-stack
-npm i -g bun
-bun install
-bun run setup
+```sh
+npx create-turbo@latest
 ```
 
-That's it. You're ready to go! Next time, you can just run `bun run dev` and start developing.
+## What's inside?
 
-When you're ready to deploy, run `bun run deploy` to deploy to Cloudflare.
+This Turborepo includes the following packages/apps:
 
-> If it fails, get your account id using these [steps](https://github.com/Dhravya/cloudflare-saas-stack/issues/11#issuecomment-2246060464) and set the `CLOUDFLARE_ACCOUNT_ID` environment variable to your account id. See [this issue](https://github.com/Dhravya/cloudflare-saas-stack/issues/11) for details.
+### Apps and Packages
 
-To apply database migrations, run `bun run migrate:prd`.
+- `docs`: a [Next.js](https://nextjs.org/) app
+- `web`: another [Next.js](https://nextjs.org/) app
+- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
+- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
+- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
 
-### Cloudflare R2 Bucket Cors / File Upload
+Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
-Don't forget to add the CORS policy to the R2 bucket.
+### Utilities
 
-Add the allowed origins to the bucket CORS policy.
+This Turborepo has some additional tools already setup for you:
 
-The CORS policy on the bucker must be like this:
-```JSON
-[
-  {
-    "AllowedOrigins": [
-      "http://localhost:3000",
-      "https://your-domain.com"
-    ],
-    "AllowedMethods": [
-      "GET",
-      "PUT"
-    ],
-    "AllowedHeaders": [
-      "Content-Type"
-    ],
-    "ExposeHeaders": [
-      "ETag"
-    ]
-  }
-]
+- [TypeScript](https://www.typescriptlang.org/) for static type checking
+- [ESLint](https://eslint.org/) for code linting
+- [Prettier](https://prettier.io) for code formatting
+
+### Build
+
+To build all apps and packages, run the following command:
+
+```
+cd my-turborepo
+pnpm build
 ```
 
-You can now test the file upload by going to `http://localhost:3000/upload` and uploading a file.
+### Develop
 
-### Manual setup
+To develop all apps and packages, run the following command:
 
-An automatic setup script is provided, but you can also manually set up the following:
-
-1. Create a Cloudflare account and install the [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/#installupdate-wrangler).
-2. Create a D1 database under "Workers and Pages" in the Cloudflare dashboard, or run ``bunx wrangler d1 create ${dbName}`
-3. Create a `.dev.vars` file in `apps/web` with the following content (Get these from google developer console):
 ```
-GOOGLE_CLIENT_ID=${your-google-client-id}
-GOOGLE_CLIENT_SECRET=${your-google-client-secret}
-NEXTAUTH_SECRET=${your-secret}
+cd my-turborepo
+pnpm dev
 ```
-4. In `apps/web`, run this command to make migrations to setup auth with database: `bunx wrangler d1 execute ${dbName} --local --file=migrations/0000_setup.sql`. This creates a local version of the database and creates the appropriate tables.
-5. Run remote migration for the production database - same command but replace `--local` with `--remote`: `bunx wrangler d1 execute ${dbName} --remote --file=migrations/0000_setup.sql`
-6. Bun `bun run dev` to start the development server.
-7. Run `bun run deploy` to deploy to Cloudflare.
 
+### Remote Caching
 
-### The beauty of this stack
+Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
 
-It's fully scalable and composable. 
-Want to add a backend hono worker, or a python backend? sure! Just put it in the monorepo and deploy. 
+By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
 
-there's no environment variables.
-want to use database? just env.DB. Want a Key-value instance? env.KV. want a queue? env.Queue.
+```
+cd my-turborepo
+npx turbo login
+```
 
-want AI? env. AI
+This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
 
-tools are incredible. there's wrangler - you can use wrangler to create/delete databases run migrations and all sorts.
+Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
 
-Getting a lot of traffic? me too. I pay $5/month, for all of my projects hosted at the same time. (see https://supermemory.ai, https://md.dhr.wtf and more)
+```
+npx turbo link
+```
+
+## Useful Links
+
+Learn more about the power of Turborepo:
+
+- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
+- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
+- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
+- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
+- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
+- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
