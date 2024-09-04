@@ -19,6 +19,10 @@ import { FileUploader } from "./file-uploader";
 import { useUploadFile } from "@repo/ui/hooks/use-upload-file";
 import { UploadedFilesCard } from "./uploaded-files-card";
 
+const schema = typeof window !== "undefined" ? z.object({
+images: z.array(z.instanceof(File)),
+}) : z.object({
+images: z.array(z.any()),
 const schema = z.object({
   images: z.array(z.instanceof(File)),
 });
