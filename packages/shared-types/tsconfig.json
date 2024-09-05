@@ -1,7 +1,0 @@
-{
-	"extends": "@repo/typescript-config/base.json",
-	"compilerOptions": {
-		"outDir": "dist"
-	},
-	"exclude": ["node_modules", "dist"]
-}
