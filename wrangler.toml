@@ -10,7 +10,3 @@ mode = "smart"
 binding = "DATABASE"
 database_name = "cloudflare-saas-stack-db"
 database_id = "294b2613-5f3c-40e5-b32b-bbe664bd9696"
-
-[[r2_buckets]]
-binding = "MY_BUCKET"
-bucket_name = "cloudflare-saas-stack-bucket"
