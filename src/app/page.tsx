@@ -1,113 +1,118 @@
-import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { sql } from "drizzle-orm";
+import { auth, signIn, signOut } from "@/server/auth";
+import { db } from "@/server/db";
+import { users } from "@/server/db/schema";
+import { getThemeToggler } from "@/lib/theme/get-theme-button";
 
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+export const runtime = "edge";
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+export default async function Page() {
+	const session = await auth();
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+	const userCount = await db
+		.select({
+			count: sql<number>`count(*)`.mapWith(Number),
+		})
+		.from(users);
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+	const SetThemeButton = getThemeToggler();
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
+	return (
+		<main className="flex flex-col items-center justify-center min-h-screen">
+			<div className="flex max-w-2xl justify-between w-full">
+				<SetThemeButton />
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+				<div className="flex gap-2 items-center justify-center">
+					{" "}
+					<svg
+						viewBox="0 0 256 116"
+						xmlns="http://www.w3.org/2000/svg"
+						width="45px"
+						height="45px"
+						preserveAspectRatio="xMidYMid"
+						role="img"
+						aria-label="Cloudflare logo"
+					>
+						<path
+							fill="#FFF"
+							d="m202.357 49.394-5.311-2.124C172.085 103.434 72.786 69.289 66.81 85.997c-.996 11.286 54.227 2.146 93.706 4.059 12.039.583 18.076 9.671 12.964 24.484l10.069.031c11.615-36.209 48.683-17.73 50.232-29.68-2.545-7.857-42.601 0-31.425-35.497Z"
+						/>
+						<path
+							fill="#F4811F"
+							d="M176.332 108.348c1.593-5.31 1.062-10.622-1.593-13.809-2.656-3.187-6.374-5.31-11.154-5.842L71.17 87.634c-.531 0-1.062-.53-1.593-.53-.531-.532-.531-1.063 0-1.594.531-1.062 1.062-1.594 2.124-1.594l92.946-1.062c11.154-.53 22.839-9.56 27.087-20.182l5.312-13.809c0-.532.531-1.063 0-1.594C191.203 20.182 166.772 0 138.091 0 111.535 0 88.697 16.995 80.73 40.896c-5.311-3.718-11.684-5.843-19.12-5.31-12.747 1.061-22.838 11.683-24.432 24.43-.531 3.187 0 6.374.532 9.56C16.996 70.107 0 87.103 0 108.348c0 2.124 0 3.718.531 5.842 0 1.063 1.062 1.594 1.594 1.594h170.489c1.062 0 2.125-.53 2.125-1.594l1.593-5.842Z"
+						/>
+						<path
+							fill="#FAAD3F"
+							d="M205.544 48.863h-2.656c-.531 0-1.062.53-1.593 1.062l-3.718 12.747c-1.593 5.31-1.062 10.623 1.594 13.809 2.655 3.187 6.373 5.31 11.153 5.843l19.652 1.062c.53 0 1.062.53 1.593.53.53.532.53 1.063 0 1.594-.531 1.063-1.062 1.594-2.125 1.594l-20.182 1.062c-11.154.53-22.838 9.56-27.087 20.182l-1.063 4.78c-.531.532 0 1.594 1.063 1.594h70.108c1.062 0 1.593-.531 1.593-1.593 1.062-4.25 2.124-9.03 2.124-13.81 0-27.618-22.838-50.456-50.456-50.456"
+						/>
+					</svg>
+					<span className="italic">Cloudflare Next Saas Starter</span>
+				</div>
+
+				<div className="border border-black dark:border-white rounded-2xl p-2 flex items-center">
+					Start by editing apps/web/page.tsx
+				</div>
+			</div>
+
+			<div className="max-w-2xl text-start w-full mt-16">
+				Welcome to Cloudflare Next Saas Starter. <br /> Built a full stack app
+				using production-ready tools and frameworks, host on Cloudflare
+				instantly.
+				<br />
+				An opinionated, batteries-included framework with{" "}
+				<a
+					className="text-transparent bg-clip-text bg-gradient-to-r from-[#a93d64] to-[#275ba9]"
+					href="https://turbo.build"
+				>
+					Turborepo
+				</a>{" "}
+				and Nextjs. Fully Typesafe. Best practices followed by default.
+				<br /> <br />
+				Here&apos;s what the stack includes:
+				<ul className="list-disc mt-4 prose dark:prose-invert">
+					<li>
+						Authentication with <code>next-auth</code>
+					</li>
+					<li>Database using Cloudflare&apos;s D1 serverless databases</li>
+					<li>Drizzle ORM, already connected to your database and auth ⚡</li>
+					<li>Light/darkmode theming that works with server components (!)</li>
+						<li>Styling using TailwindCSS and ShadcnUI</li>
+						<li>Turborepo with a landing page and shared components</li>
+						<li>Cloudflare wrangler for quick functions on the edge</li>
+						<li>
+							... best part: everything&apos;s already set up for you. Just code!
+						</li>
+				</ul>
+				<div className="mt-4 flex flex-col gap-2">
+					<span>Number of users in database: {userCount[0]!.count}</span>
+				</div>
+				{session?.user?.email ? (
+					<>
+						<div className="mt-4 flex flex-col gap-2">
+							<span>Hello {session.user.name} 👋</span>
+							<span>{session.user.email}</span>
+						</div>
+						<form
+							action={async () => {
+								"use server";
+								await signOut();
+							}}
+						>
+							<Button className="mt-4">Sign out</Button>
+						</form>
+					</>
+				) : (
+					<form
+						action={async () => {
+							"use server";
+							await signIn("google");
+						}}
+					>
+						<Button className="mt-4">Login with Google</Button>
+					</form>
+				)}
+			</div>
+		</main>
+	);
 }
