@@ -11,7 +11,10 @@
     "preview": "bun pages:build && wrangler pages dev",
     "deploy": "bun pages:build && wrangler pages deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv env.d.ts",
-    "setup": "bun run scripts/setup.ts"
+    "setup": "bun run scripts/setup.ts",
+    "wellcome": "bun scripts/wellcome.ts",
+    "generate:migration": "drizzle-kit generate:sqlite",
+    "migrate": "drizzle-kit push"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.4.2",
@@ -46,7 +49,7 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
-    "vercel": "^37.3.0",
-    "wrangler": "^3.74.0"
+    "vercel": "^37.5.3",
+    "wrangler": "^3.78.6"
   }
 }

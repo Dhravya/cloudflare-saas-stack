@@ -1,0 +1,58 @@
+{
+  // These tasks will run in order when initializing your CodeSandbox project.
+  "setupTasks": [
+    {
+      "command": "yarn global add bun && yarn install && yarn wellcome",
+      "name": "Install Dependencies"
+    }
+  ],
+
+  // These tasks can be run from CodeSandbox. Running one will open a log in the app.
+  "tasks": {
+    "dev": {
+      "name": "[start app in dev]",
+      "command": "bun dev",
+      "runAtStart": false
+    },
+    "build": {
+      "name": "build",
+      "command": "yarn build",
+      "runAtStart": false
+    },
+    "start": {
+      "name": "start",
+      "command": "yarn start",
+      "runAtStart": false
+    },
+    "lint": {
+      "name": "lint",
+      "command": "yarn lint",
+      "runAtStart": false
+    },
+    "pages:build": {
+      "name": "pages:build",
+      "command": "yarn pages:build",
+      "runAtStart": false
+    },
+    "preview": {
+      "name": "preview",
+      "command": "yarn preview",
+      "runAtStart": false
+    },
+    "deploy": {
+      "name": "deploy",
+      "command": "yarn deploy",
+      "runAtStart": false
+    },
+    "cf-typegen": {
+      "name": "cf-typegen",
+      "command": "yarn cf-typegen",
+      "runAtStart": false
+    },
+    "setup": {
+      "name": "setup",
+      "command": "yarn setup",
+      "runAtStart": false
+    }
+  }
+}
