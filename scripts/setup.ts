@@ -266,7 +266,7 @@ async function promptForGoogleClientCredentials() {
         try {
             fs.writeFileSync(
                 devVarsPath,
-                `GOOGLE_CLIENT_ID=${clientId}\nGOOGLE_CLIENT_SECRET=${clientSecret}\n`,
+                `AUTH_GOOGLE_ID=${clientId}\nAUTH_GOOGLE_SECRET=${clientSecret}\n`,
             );
             console.log(
                 "\x1b[33m.dev.vars file created with Google Client ID and Client Secret.\x1b[0m",
