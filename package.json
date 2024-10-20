@@ -11,7 +11,10 @@
     "preview": "bun pages:build && wrangler pages dev",
     "deploy": "bun pages:build && wrangler pages deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv env.d.ts",
-    "setup": "bun run scripts/setup.ts"
+    "setup": "bun run scripts/setup.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate:dev": "drizzle-kit migrate",
+    "db:migrate:prod": "NODE_ENV=production drizzle-kit migrate"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.4.2",

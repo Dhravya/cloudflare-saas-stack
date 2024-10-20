@@ -54,10 +54,11 @@ Cloudflare [Bindings](https://developers.cloudflare.com/pages/functions/bindings
 For detailed instructions on setting up bindings, refer to the Cloudflare documentation.
 
 ## Database Migrations
-
+To generate migrations files:
+- `bun run db:generate`
 To apply database migrations:
-- For development: `bun run migrate:dev`
-- For production: `bun run migrate:prd`
+- For development: `bun run db:migrate:dev`
+- For production: `bun run db:migrate:prd`
 
 ## Cloudflare R2 Bucket CORS / File Upload
 
