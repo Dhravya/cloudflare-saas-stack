@@ -266,7 +266,7 @@ async function promptForGoogleClientCredentials() {
         try {
             fs.writeFileSync(
                 devVarsPath,
-                `GOOGLE_CLIENT_ID=${clientId}\nGOOGLE_CLIENT_SECRET=${clientSecret}\n`,
+                `AUTH_GOOGLE_ID=${clientId}\nAUTH_GOOGLE_SECRET=${clientSecret}\n`,
             );
             console.log(
                 "\x1b[33m.dev.vars file created with Google Client ID and Client Secret.\x1b[0m",
@@ -298,11 +298,11 @@ async function updateDevVarsWithSecret() {
     const devVarsPath = path.join(__dirname, "..", ".dev.vars");
 
     try {
-        if (!fs.readFileSync(devVarsPath, "utf-8").includes("NEXTAUTH_SECRET")) {
-            fs.appendFileSync(devVarsPath, `\nNEXTAUTH_SECRET=${secret}`);
+        if (!fs.readFileSync(devVarsPath, "utf-8").includes("AUTH_SECRET")) {
+            fs.appendFileSync(devVarsPath, `\nAUTH_SECRET=${secret}`);
             console.log("\x1b[33mSecret appended to .dev.vars file.\x1b[0m");
         } else {
-            console.log("\x1b[31mNEXTAUTH_SECRET already exists in .dev.vars\x1b[0m");
+            console.log("\x1b[31mAUTH_SECRET already exists in .dev.vars\x1b[0m");
         }
     } catch (error) {
         console.error("\x1b[31mError updating .dev.vars file:", error, "\x1b[0m");
