@@ -44,6 +44,7 @@ Besides the `dev` script, `c3` has added extra scripts for Cloudflare Pages inte
 - `pages:build`: Build the application for Pages using [`@cloudflare/next-on-pages`](https://github.com/cloudflare/next-on-pages) CLI
 - `preview`: Locally preview your Pages application using [Wrangler](https://developers.cloudflare.com/workers/wrangler/) CLI
 - `deploy`: Deploy your Pages application using Wrangler CLI
+- `cf-typegen`: Generate typescript types for Cloudflare env.
 
 > __Note:__ While the `dev` script is optimal for local development, you should preview your Pages application periodically to ensure it works properly in the Pages environment.
 
@@ -54,11 +55,24 @@ Cloudflare [Bindings](https://developers.cloudflare.com/pages/functions/bindings
 For detailed instructions on setting up bindings, refer to the Cloudflare documentation.
 
 ## Database Migrations
+Quick explaination of D1 set up:
+- D1 is a serverless database that follows SQLite convention.
+- Within Cloudflare pages and workers, you can directly query d1 with [client api](https://developers.cloudflare.com/d1/build-with-d1/d1-client-api/) exposed by bindings (eg. `env.BINDING`)
+- You can also query d1 via [rest api](https://developers.cloudflare.com/api/operations/cloudflare-d1-create-database)
+- Locally, wrangler auto generates sqlite files at `.wrangler/state/v3/d1` after `bun run dev`.
+- Local dev environment (`bun run dev`) interact with [local d1 session](https://developers.cloudflare.com/d1/build-with-d1/local-development/#start-a-local-development-session), which is based on some SQlite files located at `.wrangler/state/v3/d1`.
+- In dev mode (`bun run db:<migrate or studio>:dev`), Drizzle-kit (migrate and studio) directly modifies these files as regular SQlite db. While `bun run db:<migrate or studio>:prod` use d1-http driver to interact with remote d1 via rest api. Therefore we need to set env var at `.env.example`
+
 To generate migrations files:
 - `bun run db:generate`
+
 To apply database migrations:
 - For development: `bun run db:migrate:dev`
 - For production: `bun run db:migrate:prd`
+
+To inspect database:
+- For local database `bun run db:studio:dev`
+- For remote database `bun run db:studio:prod`
 
 ## Cloudflare R2 Bucket CORS / File Upload
 

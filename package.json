@@ -14,7 +14,9 @@
     "setup": "bun run scripts/setup.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate:dev": "drizzle-kit migrate",
-    "db:migrate:prod": "NODE_ENV=production drizzle-kit migrate"
+    "db:migrate:prod": "NODE_ENV=production drizzle-kit migrate",
+    "db:studio:dev": "drizzle-kit studio",
+    "db:studio:prod": "NODE_ENV=production drizzle-kit studio"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.4.2",
