@@ -93,10 +93,15 @@ If you prefer manual setup:
 1. Create a Cloudflare account and install Wrangler CLI.
 2. Create a D1 database: `bunx wrangler d1 create ${dbName}`
 3. Create a `.dev.vars` file in the project root with your Google OAuth credentials and NextAuth secret.
-4. Run local migration: `bunx wrangler d1 execute ${dbName} --local --file=migrations/0000_setup.sql`
-5. Run remote migration: `bunx wrangler d1 execute ${dbName} --remote --file=migrations/0000_setup.sql`
-6. Start development server: `bun run dev`
-7. Deploy: `bun run deploy`
+   1. `AUTH_SECRET`, generate by command `openssl rand -base64 32` or `bunx auth secret`
+   2. `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET` for google oauth.
+      1. First create [OAuth consent screen](https://console.cloud.google.com/apis/credentials/consent). Tips: no wait time if you skip logo upload.
+      2. Create [credential](https://console.cloud.google.com/apis/credentials). Put `https://your-domain` and `http://localhost:3000` at "Authorized JavaScript origins". Put `https://your-domain/api/auth/callback/google` and `http://localhost:3000/api/auth/callback/google` at "Authorized redirect URIs".
+4. Generate db migration files: `bun run db:generate`
+5. Run local migration: `bunx wrangler d1 execute ${dbName} --local --file=migrations/0000_setup.sql` or using drizzle `bun run db:migrate:dev`
+6. Run remote migration: `bunx wrangler d1 execute ${dbName} --remote --file=migrations/0000_setup.sql` or using drizzle `bun run db:migrate:prod`
+7. Start development server: `bun run dev`
+8. Deploy: `bun run deploy`
 
 ## The Beauty of This Stack
 
