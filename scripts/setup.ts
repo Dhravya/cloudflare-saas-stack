@@ -164,6 +164,7 @@ async function createDatabaseAndConfigure() {
                 binding: "DATABASE",
                 database_name: dbName,
                 database_id: databaseID!,
+                migrations_dir: "./drizzle",
             },
         ],
     };
